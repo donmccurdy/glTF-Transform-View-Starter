@@ -8,7 +8,8 @@
   "type": "module",
   "scripts": {
     "dev": "vite",
-    "build": "vite build"
+    "build": "vite build",
+    "deploy": "vercel --prod"
   },
   "devDependencies": {
     "@gltf-transform/core": "^3.10.0",

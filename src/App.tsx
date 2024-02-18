@@ -89,7 +89,7 @@ export function App() {
         </label>
         <label>
           baseColor
-          <input type="color" value="#FFFFFF" onChange={onChangeColor} />
+          <input type="color" defaultValue="#FFFFFF" onChange={onChangeColor} />
         </label>
         <label>
           <button onClick={onDownloadClick}>Download</button>
