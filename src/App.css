@@ -14,4 +14,17 @@ header {
     top: 0;
     left: 0;
     width: 100%;
+    z-index: 100;
+}
+
+label {
+    padding-left: 1em;
+    text-align: left;
+    display: block;
+    line-height: 2.5em;
+}
+
+label input,
+label select {
+    margin-left: 1em;
 }

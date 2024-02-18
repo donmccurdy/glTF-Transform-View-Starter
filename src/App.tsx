@@ -1,21 +1,25 @@
 import "./App.css";
 import { Canvas } from "@react-three/fiber";
-import { PresentationControls, Shadow } from "@react-three/drei";
+import { PresentationControls } from "@react-three/drei";
 import { RoomEnvironment } from "./components/RoomEnvironment";
-import { useEffect, useState } from "react";
-import { Document, WebIO } from "@gltf-transform/core";
+import { ChangeEvent, useEffect, useState } from "react";
+import { ColorUtils, Document, Material, WebIO } from "@gltf-transform/core";
 import { KHRONOS_EXTENSIONS } from "@gltf-transform/extensions";
 import { DocumentView } from "@gltf-transform/view";
 import { Group } from "three";
+import { downloadBytes } from "./utils/downloadBytes";
 
 const IO = new WebIO().registerExtensions(KHRONOS_EXTENSIONS);
 
 export function App() {
-  const [url] = useState<string>("/Duck.glb");
+  const [url] = useState<string>("/Shoe.glb");
+  const [variant, setVariant] = useState<string>("midnight");
   const [document, setDocument] = useState<Document | null>(null);
   const [documentView, setDocumentView] = useState<DocumentView | null>(null);
   const [group, setGroup] = useState<Group | null>(null);
+  const [material, setMaterial] = useState<Material | null>(null);
 
+  // Read GLB, and initialize DocumentView syncing it into the three.js scene.
   useEffect(() => {
     IO.read(url).then((document) => {
       const documentView = new DocumentView(document);
@@ -23,26 +27,77 @@ export function App() {
       setDocument(document);
       setDocumentView(documentView);
       setGroup(documentView.view(scene));
+      setMaterial(document.getRoot().listMaterials()[0]!);
     });
   }, [url]);
+
+  // On variant change, assign a new baseColorTexture.
+  useEffect(() => {
+    if (!document || !documentView || !material) return;
+
+    fetch(`/${variant}.jpg`)
+      .then((res) => res.arrayBuffer())
+      .then((buffer: ArrayBuffer) => {
+        const srcTexture = material.getBaseColorTexture()!;
+        srcTexture.dispose();
+
+        const dstTexture = document
+          .createTexture()
+          .setImage(new Uint8Array(buffer))
+          .setName(variant)
+          .setMimeType("image/jpeg");
+        material.setBaseColorTexture(dstTexture);
+
+        documentView.gc();
+      });
+  }, [document, documentView, variant]);
+
+  function onChangeColor(event: ChangeEvent<HTMLInputElement>) {
+    if (!material) return;
+    const hex = Number(event.target.value.replace("#", "0x"));
+    material.setBaseColorFactor(ColorUtils.hexToFactor(hex, [0, 0, 0, 1]));
+  }
+
+  function onChangeVariant(event: ChangeEvent<HTMLSelectElement>) {
+    setVariant(event.target.value);
+  }
+
+  async function onDownloadClick() {
+    if (!document) return;
+    downloadBytes(await IO.writeBinary(document), `shoe-${variant}.glb`);
+  }
 
   return (
     <>
       <header>
         <h1>glTF Transform View Starter</h1>
         <p>by Don McCurdy</p>
+        <label>
+          baseColorTexture
+          <select value={variant} onChange={onChangeVariant}>
+            <option value="beach">Beach</option>
+            <option value="midnight">Midnight</option>
+            <option value="street">Street</option>
+          </select>
+        </label>
+        <label>
+          baseColor
+          <input type="color" value="#FFFFFF" onChange={onChangeColor} />
+        </label>
+        <label>
+          <button onClick={onDownloadClick}>Download</button>
+        </label>
       </header>
       <div id="container">
         <Canvas>
           <PresentationControls>
-            {group && <primitive object={group} />}
-            <Shadow
-              position={[0, 0, 0]}
-              scale={[3, 1, 1]}
-              color="#1f290f"
-              colorStop={0}
-              opacity={0.25}
-            />
+            {group && (
+              <primitive
+                position={[0, -0.5, 0]}
+                scale={[15, 15, 15]}
+                object={group}
+              />
+            )}
           </PresentationControls>
           <RoomEnvironment />
         </Canvas>
