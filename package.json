@@ -1,0 +1,29 @@
+{
+  "name": "glTF-Transform-View-Starter",
+  "version": "0.0.1",
+  "description": "Starter project for @gltf-transform/view + react three fiber",
+  "author": "Don McCurdy <dm@donmccurdy.com>",
+  "license": "MIT",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite dev",
+    "build": "vite"
+  },
+  "devDependencies": {
+    "@gltf-transform/core": "^3.10.0",
+    "@gltf-transform/extensions": "^3.10.0",
+    "@gltf-transform/view": "^0.14.0",
+    "@react-three/drei": "^9.97.6",
+    "@react-three/fiber": "^8.15.16",
+    "@types/react": "^18.2.56",
+    "@types/react-dom": "^18.2.19",
+    "@types/three": "^0.161.2",
+    "@vitejs/plugin-react": "^4.2.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
+    "three": "^0.161.0",
+    "typescript": "^5.3.3",
+    "vite": "^5.1.3"
+  }
+}
