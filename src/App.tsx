@@ -23,7 +23,7 @@ export function App() {
   useEffect(() => {
     IO.read(url).then((document) => {
       const documentView = new DocumentView(document);
-      const scene = document.getRoot().getDefaultScene();
+      const scene = document.getRoot().getDefaultScene()!;
       setDocument(document);
       setDocumentView(documentView);
       setGroup(documentView.view(scene));
@@ -38,9 +38,11 @@ export function App() {
     fetch(`/${variant}.jpg`)
       .then((res) => res.arrayBuffer())
       .then((buffer: ArrayBuffer) => {
+        // Dispose previous texture.
         const srcTexture = material.getBaseColorTexture()!;
         srcTexture.dispose();
 
+        // Create and assign new texture.
         const dstTexture = document
           .createTexture()
           .setImage(new Uint8Array(buffer))
@@ -48,12 +50,16 @@ export function App() {
           .setMimeType("image/jpeg");
         material.setBaseColorTexture(dstTexture);
 
+        // Run garbage collection for GPU resources.
         documentView.gc();
       });
   }, [document, documentView, variant]);
 
   function onChangeColor(event: ChangeEvent<HTMLInputElement>) {
     if (!material) return;
+
+    // Assign base color texture. Hexadecimal colors are assumed to be sRGB;
+    // hexToFactor does an implicit conversion to Linear-sRGB.
     const hex = Number(event.target.value.replace("#", "0x"));
     material.setBaseColorFactor(ColorUtils.hexToFactor(hex, [0, 0, 0, 1]));
   }
@@ -62,6 +68,7 @@ export function App() {
     setVariant(event.target.value);
   }
 
+  // Serialize current state of Document to GLB, and start a download.
   async function onDownloadClick() {
     if (!document) return;
     downloadBytes(await IO.writeBinary(document), `shoe-${variant}.glb`);

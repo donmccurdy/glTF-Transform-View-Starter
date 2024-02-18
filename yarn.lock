@@ -345,10 +345,10 @@
     "@gltf-transform/core" "^3.10.0"
     ktx-parse "^0.6.0"
 
-"@gltf-transform/view@^0.14.0":
-  version "0.14.0"
-  resolved "https://registry.yarnpkg.com/@gltf-transform/view/-/view-0.14.0.tgz#4298a19f415dbce78b4830c7acd8a79997883a73"
-  integrity sha512-Gv/0JVLkVaFfdPrM2/zKUx6npYPlGe8/595zE6gClsf6L/bpiiVbz9Q04CHyLAptH/FTFb0FnNPXufFHkKAuYw==
+"@gltf-transform/view@^0.14.1":
+  version "0.14.1"
+  resolved "https://registry.yarnpkg.com/@gltf-transform/view/-/view-0.14.1.tgz#47bcc1fbea150bfe99a4f07e6c6ac23d43838b83"
+  integrity sha512-Tpp37rWz6hkTw+FnzRZJuOAEI8Hyh0AyZIbVIzNy0BvNGmj6VkGGlpCSp6nQS/0oVcO/HkaLNT9CZssPlx5ksw==
 
 "@jridgewell/gen-mapping@^0.3.0", "@jridgewell/gen-mapping@^0.3.2":
   version "0.3.3"

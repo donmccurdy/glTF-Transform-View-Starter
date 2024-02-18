@@ -13,7 +13,7 @@
   "devDependencies": {
     "@gltf-transform/core": "^3.10.0",
     "@gltf-transform/extensions": "^3.10.0",
-    "@gltf-transform/view": "^0.14.0",
+    "@gltf-transform/view": "^0.14.1",
     "@react-three/drei": "^9.97.6",
     "@react-three/fiber": "^8.15.16",
     "@types/react": "^18.2.56",
